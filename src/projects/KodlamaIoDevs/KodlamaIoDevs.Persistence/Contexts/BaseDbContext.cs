@@ -1,9 +1,13 @@
-﻿using KodlamaIoDevs.Domain.Entities;
+﻿using Core.Security.Entities;
+using Core.Security.Enums;
+using KodlamaIoDevs.Domain.Entities;
+using KodlamaIoDevs.Persistence.EntityTypeConfigurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +17,12 @@ namespace KodlamaIoDevs.Persistence.Contexts
     {
         protected IConfiguration Configuration { get; set; }
         public DbSet<Language> Languages { get; set; }
-
+        public DbSet<Technology> Technologies { get; set; }
+        public DbSet<KodlamaIoUser> KodlamaIoUsers{ get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<OperationClaim> OperationClaims { get; set; }
+        public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration) : base(dbContextOptions)
         {
@@ -29,18 +38,8 @@ namespace KodlamaIoDevs.Persistence.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Language>(a =>
-            {
-                a.ToTable("Languages").HasKey(k => k.Id);
-                a.Property(p => p.Id).HasColumnName("Id");
-                a.Property(p => p.Name).HasColumnName("Name");
-            });
-
-
-
-            Language[] languageEntitySeeds = { new(1, "C#"), new(2, "Java") };
-            modelBuilder.Entity<Language>().HasData(languageEntitySeeds);
-
+            //Bu satırda tüm IEntityTypeConfiguration tipindeki concrete classlar register ediliyor...
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         }
     }

@@ -12,7 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Languages\Constants\" />
+    <Folder Include="Features\Auth\Dtos\" />
+    <Folder Include="Features\Auth\Models\" />
+    <Folder Include="Features\Auth\Profiles\" />
+    <Folder Include="Features\Auth\Rules\" />
+    <Folder Include="Features\Auth\Queries\" />
+    <Folder Include="Features\Users\Models\" />
   </ItemGroup>
 
   <ItemGroup>

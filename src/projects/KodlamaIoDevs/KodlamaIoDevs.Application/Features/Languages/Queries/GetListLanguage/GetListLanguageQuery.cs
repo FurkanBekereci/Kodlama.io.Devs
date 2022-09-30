@@ -5,6 +5,7 @@ using KodlamaIoDevs.Application.Features.Languages.Models;
 using KodlamaIoDevs.Application.Services.Repositories;
 using KodlamaIoDevs.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +19,22 @@ namespace KodlamaIoDevs.Application.Features.Languages.Queries.GetListLanguage
         public PageRequest PageRequest { get; set; }
         public class GetListLanguageQueryHandler : IRequestHandler<GetListLanguageQuery, LanguageListModel>
         {
-            private readonly ILanguageRepository _LanguageRepository;
+            private readonly ILanguageRepository _languageRepository;
             private readonly IMapper _mapper;
 
-            public GetListLanguageQueryHandler(ILanguageRepository LanguageRepository, IMapper mapper)
+            public GetListLanguageQueryHandler(ILanguageRepository languageRepository, IMapper mapper)
             {
-                _LanguageRepository = LanguageRepository;
+                _languageRepository = languageRepository;
                 _mapper = mapper;
             }
 
             public async Task<LanguageListModel> Handle(GetListLanguageQuery request, CancellationToken cancellationToken)
             {
-                IPaginate<Language> Languages = await _LanguageRepository.GetListAsync(index: request.PageRequest.Page, size: request.PageRequest.PageSize);
+                IPaginate<Language> Languages = await _languageRepository.GetListAsync(
+                                                    index: request.PageRequest.Page, 
+                                                    size: request.PageRequest.PageSize,
+                                                    include: l => l.Include(i => i.Technologies)
+                                                    );
                 LanguageListModel mappedLanguageListModel = _mapper.Map<LanguageListModel>(Languages);
                 return mappedLanguageListModel;
 

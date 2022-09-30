@@ -1,6 +1,10 @@
-﻿using Core.Application.Pipelines.Validation;
+﻿using Core.Application.Pipelines.Authorization;
+using Core.Application.Pipelines.Validation;
 using FluentValidation;
+using KodlamaIoDevs.Application.Features.KodlamaIoUsers.Rules;
 using KodlamaIoDevs.Application.Features.Languages.Rules;
+using KodlamaIoDevs.Application.Features.Technologies.Rules;
+using KodlamaIoDevs.Application.Features.Users.Rules;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -21,11 +25,14 @@ namespace KodlamaIoDevs.Application
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.AddScoped<LanguageBusinessRules>();
+            services.AddScoped<TechnologyBusinessRules>();
+            services.AddScoped<UserBusinessRules>();
+            services.AddScoped<KodlamaIoUserBusinessRules>();
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
-
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheRemovingBehavior<,>));
             //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));

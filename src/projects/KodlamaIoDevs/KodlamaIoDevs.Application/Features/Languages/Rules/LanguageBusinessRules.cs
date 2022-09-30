@@ -1,5 +1,6 @@
 ﻿using Core.CrossCuttingConcerns.Exceptions;
 using Core.Persistence.Paging;
+using KodlamaIoDevs.Application.Features.Languages.Constants;
 using KodlamaIoDevs.Application.Services.Repositories;
 using KodlamaIoDevs.Domain.Entities;
 using System;
@@ -21,14 +22,18 @@ namespace KodlamaIoDevs.Application.Features.Languages.Rules
 
         public void LanguageShouldExistWhenRequested(Language? language)
         {
-            if (language == null) throw new BusinessException("Requested language does not exist.");
+            if (language == null) throw new BusinessException(LanguageConstants.LanguageShouldExistWhenRequestedMessage);
         }
 
         public async Task LanguageNameCanNotBeDuplicatedWhenInsertedOrUpdated(string name)
         {
             IPaginate<Language> result = await _languageRepository.GetListAsync(b => b.Name == name);
-            if (result.Items.Any()) throw new BusinessException("Language name already exists.");
+            if (result.Items.Any()) throw new BusinessException(LanguageConstants.LanguageNameCanNotBeDuplicatedMessage);
         }
 
+        public void LanguageNameShouldBeDifferentWhenUpdated(Language? language, string name)
+        {
+            if (language!.Name == name) throw new BusinessException(LanguageConstants.LanguageNameShouldBeDifferentWhenUpdatedMessage);
+        }
     }
 }
